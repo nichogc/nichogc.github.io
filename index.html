@@ -39,7 +39,10 @@
 <p id="erro"></p>
 <script>
 function verificar() {
-  var senha = document.getElementById("senha").value.toLowerCase().replace(" ", "");
+  var senha = document.getElementById("senha").value
+                .toLowerCase()
+                .trim()
+                .replace(/\s+/g, "");
 
   if(senha === "teamo") {
     window.location.href = "fase2.html";
