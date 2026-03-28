@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Ta gostando?</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ffcc;
+    font-family: Arial;
+    text-align: center;
+    margin-top: 100px;
+  }
+  input, button {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    border: none;
+  }
+  button {
+    background-color: #00ffcc;
+    cursor: pointer;
+  }
+</style>
+</head>
 
+<body>
+
+<h1>🔐 Missão Especial</h1>
+
+<p>Decifre o enigma para continuar:</p>
+
+<p><b>JUDCLHOOD, YRFH HVWD SURQWD SDUD R GHVDILR?</b></p>
+
+<input type="password" id="senha" placeholder="Digite a resposta">
+<br>
+<button onclick="verificar()">Entrar</button>
+
+<p id="erro"></p>
+
+<script>
+function verificar() {
+  var senha = document.getElementById("senha").value.toUpperCase();
+
+  if(senha === "GRAZIELLA VOCE ESTA PRONTA PARA O DESAFIO") {
+    window.location.href = "fase2.html";
+  } else {
+    document.getElementById("erro").innerHTML = "❌ Tente novamente...";
+  }
+}
+</script>
+
+</body>
+</html>
