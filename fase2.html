@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Fase 2</title>
+<style>
+  body {
+    background-color: #111;
+    color: #00ffcc;
+    font-family: Arial;
+    text-align: center;
+    margin-top: 100px;
+  }
+</style>
+</head>
 
+<body>
+
+<h1>Passou de Fase uhuuuu</h1>
+
+<p>Decifre:</p>
+
+<p><b>Vm9jZSBjb21lw6fvdSB0dWRvIG5vIGRpYSAyMS8wMy8yMDIz</b></p>
+
+<p>Dica: Nem tudo precisa de chave...</p>
+
+<input type="password" id="senha">
+<br>
+<button onclick="verificar()">Continuar</button>
+
+<p id="erro"></p>
+
+<script>
+function verificar() {
+  var senha = document.getElementById("senha").value;
+
+  if(senha === "21032023") {
+    window.location.href = "final.html";
+  } else {
+    document.getElementById("erro").innerHTML = "❌ Pense melhor...";
+  }
+}
+</script>
+
+</body>
+</html>
