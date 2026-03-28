@@ -37,10 +37,9 @@
 <button onclick="verificar()">Entrar</button>
 
 <p id="erro"></p>
-
 <script>
 function verificar() {
-  var senha = document.getElementById("senha").value.toUpperCase();
+  var senha = document.getElementById("senha").value.toLowerCase().replace(" ", "");
 
   if(senha === "teamo") {
     window.location.href = "fase2.html";
