@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grazzi — Fase 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #ff6eb4;
+    --purple: #9b5fd0;
+    --yellow: #ffe066;
+    --dark: #0d0010;
+    --darker: #070008;
+    --card: #1a0528;
+    --border: #3d1160;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--darker);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Particle canvas */
+  #particles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .scene {
+    position: relative;
+    z-index: 1;
+    width: min(520px, 92vw);
+    padding: 10px;
+  }
+
+  /* Phase badge */
+  .phase-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--purple);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .phase-badge::before, .phase-badge::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--purple), transparent);
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 40px 36px;
+    box-shadow:
+      0 0 0 1px #2a0840,
+      inset 0 1px 0 rgba(255,110,180,0.1),
+      0 20px 60px rgba(0,0,0,0.8),
+      0 0 40px rgba(155,95,208,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Corner pixels */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 12px; height: 12px;
+    background: var(--pink);
+    box-shadow: calc(100% + 2px - 12px + 2px * 2) 0 0 var(--pink),
+                0 calc(100% + 2px - 12px + 2px * 2) 0 var(--pink),
+                calc(100% + 2px - 12px + 2px * 2) calc(100% + 2px - 12px + 2px * 2) 0 var(--pink);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .title-small {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--pink);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(0.85rem, 3vw, 1.2rem);
+    color: #fff;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  h1 span {
+    color: var(--pink);
+  }
+
+  .name-tag {
+    display: inline-block;
+    background: var(--purple);
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+    margin-bottom: 28px;
+    border-bottom: 3px solid #6a3fa0;
+    letter-spacing: 2px;
+  }
+
+  .riddle-box {
+    background: rgba(0,0,0,0.4);
+    border-left: 3px solid var(--pink);
+    padding: 20px 22px;
+    margin-bottom: 30px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .riddle-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.45rem;
+    color: var(--pink);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .riddle-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--yellow);
+    line-height: 1.5;
+    letter-spacing: 3px;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  .input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  input[type="password"] {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid var(--border);
+    border-bottom: 4px solid var(--purple);
+    color: var(--pink);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8rem;
+    padding: 14px 18px;
+    border-radius: 4px;
+    outline: none;
+    letter-spacing: 4px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: var(--pink);
+  }
+
+  input[type="password"]:focus {
+    border-color: var(--pink);
+    border-bottom-color: var(--pink);
+    box-shadow: 0 0 20px rgba(255,110,180,0.2);
+  }
+
+  input[type="password"]::placeholder {
+    color: #3d1160;
+    letter-spacing: 2px;
+    font-size: 0.6rem;
+  }
+
+  .btn {
+    width: 100%;
+    background: var(--purple);
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    padding: 16px;
+    border: none;
+    border-bottom: 5px solid #5a2f90;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: transform 0.1s, border-bottom-width 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .btn:hover {
+    background: #b06fd8;
+  }
+
+  .btn:active {
+    transform: translateY(3px);
+    border-bottom-width: 2px;
+  }
+
+  .erro {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: #ff4466;
+    margin-top: 14px;
+    min-height: 20px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Shake */
+  @keyframes shake {
+    0%,100%{ transform: translateX(0); }
+    20%{ transform: translateX(-8px); }
+    40%{ transform: translateX(8px); }
+    60%{ transform: translateX(-5px); }
+    80%{ transform: translateX(5px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  /* Pixel hearts deco */
+  .deco-hearts {
+    text-align: right;
+    font-size: 0.6rem;
+    opacity: 0.3;
+    margin-top: 20px;
+    letter-spacing: 4px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="scene">
+  <div class="phase-badge">FASE 1 DE 2</div>
+
+  <div class="card" id="card">
+    <div class="title-small">✦ ENIGMA ✦</div>
+    <h1>Quero ver você<br><span>resolver</span></h1>
+    <div class="name-tag">GRAZZI</div>
+
+    <div class="riddle-box">
+      <div class="riddle-label">▶ DECODIFIQUE</div>
+      <div class="riddle-text">hsoac</div>
+    </div>
+
+    <div class="input-wrap">
+      <input type="password" id="senha" placeholder="sua resposta aqui..." autocomplete="off">
+    </div>
+
+    <button class="btn" onclick="verificar()">▶ CONFIRMAR</button>
+
+    <div class="erro" id="erro"></div>
+
+    <div class="deco-hearts">♥ ♥ ♥</div>
+  </div>
+</div>
+
+<script>
+// ── Particles ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, parts = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function mkPart() {
+  return {
+    x: Math.random() * W,
+    y: H + 10,
+    vy: -(Math.random() * 0.6 + 0.3),
+    vx: (Math.random() - 0.5) * 0.3,
+    size: Math.random() * 4 + 2,
+    life: 1,
+    decay: Math.random() * 0.003 + 0.001,
+    color: ['#ff6eb4','#9b5fd0','#ffe066','#ff4488'][Math.floor(Math.random()*4)]
+  };
+}
+
+for(let i=0;i<60;i++) { let p = mkPart(); p.y = Math.random()*H; p.life = Math.random(); parts.push(p); }
+
+function animParts() {
+  ctx.clearRect(0,0,W,H);
+  if(Math.random() < 0.15) parts.push(mkPart());
+  parts = parts.filter(p => p.life > 0);
+  parts.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+    ctx.globalAlpha = p.life * 0.5;
+    ctx.fillStyle = p.color;
+    // pixel square
+    const s = Math.floor(p.size);
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y), s, s);
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animParts);
+}
+animParts();
+
+// ── Logic ──
+function verificar() {
+  const val = document.getElementById('senha').value
+    .toLowerCase().trim().replace(/\s+/g,'');
+  const card = document.getElementById('card');
+  const erro = document.getElementById('erro');
+
+  if(val === 'teamo') {
+    document.querySelector('.btn').textContent = '✓ CORRETO!';
+    document.querySelector('.btn').style.background = '#20a060';
+    document.querySelector('.btn').style.borderBottomColor = '#106030';
+    erro.innerHTML = '';
+    setTimeout(() => window.location.href = 'fase2.html', 800);
+  } else {
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+    erro.innerHTML = '✕ &nbsp;Pensa melhor, meu amor...';
+  }
+}
+
+document.getElementById('senha').addEventListener('keydown', e => {
+  if(e.key === 'Enter') verificar();
+});
+</script>
+</body>
+</html>
