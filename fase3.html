@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fase 3 — Grazzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #ff6eb4;
+    --purple: #9b5fd0;
+    --yellow: #ffe066;
+    --teal: #00e5cc;
+    --dark: #001a18;
+    --darker: #000f0e;
+    --card: #01201e;
+    --border: #00504a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--darker);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  #particles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .scene {
+    position: relative;
+    z-index: 1;
+    width: min(540px, 92vw);
+    padding: 10px;
+  }
+
+  /* Victory banner at top */
+  .victory-bar {
+    background: linear-gradient(90deg, var(--teal), #00b8a0, var(--teal));
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: #001a18;
+    text-align: center;
+    padding: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    border-radius: 2px;
+    animation: barPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes barPulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  .phase-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--teal);
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.7;
+  }
+  .phase-badge::before, .phase-badge::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+
+  .card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 40px 36px;
+    box-shadow:
+      0 0 0 1px #003530,
+      inset 0 1px 0 rgba(0,229,204,0.08),
+      0 20px 60px rgba(0,0,0,0.9),
+      0 0 50px rgba(0,229,204,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0.6;
+  }
+
+  .congrats-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,204,0.1);
+    border: 1px solid rgba(0,229,204,0.3);
+    color: var(--teal);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    padding: 8px 14px;
+    margin-bottom: 22px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+  }
+
+  h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(0.75rem, 2.5vw, 1rem);
+    color: #fff;
+    line-height: 2;
+    margin-bottom: 10px;
+  }
+
+  h1 .hl { color: var(--teal); }
+
+  .subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .mission-box {
+    background: rgba(0,0,0,0.5);
+    border-left: 3px solid var(--teal);
+    padding: 20px 22px;
+    margin-bottom: 24px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .mission-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.42rem;
+    color: var(--teal);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .mission-text {
+    font-size: 1.05rem;
+    color: #ccc;
+    line-height: 1.6;
+    font-weight: 700;
+  }
+
+  .link-box {
+    background: rgba(0,0,0,0.6);
+    border: 1px dashed rgba(0,229,204,0.3);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+
+  .link-box:hover {
+    border-color: var(--teal);
+    background: rgba(0,229,204,0.05);
+  }
+
+  .link-icon {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+
+  .link-url {
+    font-size: 0.8rem;
+    color: var(--teal);
+    font-weight: 700;
+    word-break: break-all;
+    opacity: 0.8;
+  }
+
+  .hint-box {
+    background: rgba(255,224,102,0.06);
+    border: 1px solid rgba(255,224,102,0.2);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .hint-icon {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--yellow);
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .hint-text {
+    font-size: 0.9rem;
+    color: var(--yellow);
+    font-weight: 700;
+    opacity: 0.85;
+    line-height: 1.5;
+  }
+
+  .cipher-box {
+    background: rgba(0,0,0,0.6);
+    border: 2px dashed rgba(0,229,204,0.4);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .cipher-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.42rem;
+    color: var(--teal);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    opacity: 0.6;
+  }
+
+  .cipher-code {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.8rem;
+    color: var(--teal);
+    letter-spacing: 8px;
+    text-shadow: 0 0 20px rgba(0,229,204,0.4);
+  }
+
+  .input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  input[type="password"], input[type="text"] {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--border);
+    border-bottom: 4px solid var(--teal);
+    color: var(--teal);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8rem;
+    padding: 14px 18px;
+    border-radius: 4px;
+    outline: none;
+    letter-spacing: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: var(--teal);
+  }
+
+  input[type="password"]:focus, input[type="text"]:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 20px rgba(0,229,204,0.2);
+  }
+
+  input[type="password"]::placeholder, input[type="text"]::placeholder {
+    color: #004040;
+    letter-spacing: 2px;
+    font-size: 0.55rem;
+  }
+
+  .btn {
+    width: 100%;
+    background: var(--teal);
+    color: #001a18;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    padding: 16px;
+    border: none;
+    border-bottom: 5px solid #009080;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-weight: 900;
+    transition: transform 0.1s, border-bottom-width 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .btn:hover { filter: brightness(1.1); }
+  .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+
+  .erro {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: #ff4466;
+    margin-top: 14px;
+    min-height: 20px;
+    letter-spacing: 1px;
+  }
+
+  @keyframes shake {
+    0%,100%{ transform: translateX(0); }
+    20%{ transform: translateX(-8px); }
+    40%{ transform: translateX(8px); }
+    60%{ transform: translateX(-5px); }
+    80%{ transform: translateX(5px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  .deco { text-align: right; font-family: 'Press Start 2P', monospace; font-size: 0.4rem; color: rgba(0,229,204,0.2); margin-top: 20px; letter-spacing: 4px; }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="scene">
+  <div class="victory-bar">★ FASE 2 CONCLUÍDA — ÚLTIMA FASE ★</div>
+  <div class="phase-badge">FASE 3 DE 3</div>
+
+  <div class="card" id="card">
+    <div class="congrats-tag">✓ &nbsp;QUASE LÁ — ÚLTIMO DESAFIO!</div>
+
+    <h1>Decifre<br><span class="hl">a data que<br>mudou tudo</span></h1>
+
+    <div class="mission-box">
+      <div class="mission-label">▶ DECIFRE O CÓDIGO</div>
+      <div class="mission-text">O Dia mais importante pra mim desde que te conheci, já que ele tem grande valor agora.</div>
+    </div>
+
+    <div class="cipher-box">
+      <div class="cipher-label">▼ CÓDIGO CRIPTOGRAFADO</div>
+      <div class="cipher-code">54 / 39</div>
+    </div>
+
+    <div class="hint-box" style="margin-top:12px;">
+      <span class="hint-icon">💡 DICA</span>
+      <span class="hint-text">Cada número aí foi andando pra frente. Em que fase você está agora? Anda esse tanto de casas pra trás em cada dígito.</span>
+    </div>
+
+    <div class="input-wrap">
+      <input type="text" id="resposta" placeholder="DD/MM" autocomplete="off">
+    </div>
+
+    <button class="btn" onclick="verificarFase3()">▶ CONFIRMAR</button>
+
+    <div class="erro" id="erro"></div>
+    <div class="deco">♦ ♦ ♦</div>
+    <div class="deco" style="margin-top:6px;">♥ ♥ ♥</div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, parts = [];
+
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+function mkPart() {
+  return {
+    x: Math.random() * W, y: H + 10,
+    vy: -(Math.random()*0.7+0.3), vx: (Math.random()-0.5)*0.4,
+    size: Math.random()*3+2, life: 1,
+    decay: Math.random()*0.003+0.001,
+    color: ['#00e5cc','#00b8a0','#ffe066','#00ffee'][Math.floor(Math.random()*4)]
+  };
+}
+for(let i=0;i<60;i++){let p=mkPart();p.y=Math.random()*H;p.life=Math.random();parts.push(p);}
+
+function animParts() {
+  ctx.clearRect(0,0,W,H);
+  if(Math.random()<0.15) parts.push(mkPart());
+  parts = parts.filter(p=>p.life>0);
+  parts.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy; p.life-=p.decay;
+    ctx.globalAlpha = p.life*0.45;
+    ctx.fillStyle = p.color;
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y), Math.floor(p.size), Math.floor(p.size));
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animParts);
+}
+animParts();
+
+function verificarFase3() {
+  const card = document.getElementById('card');
+  const erro = document.getElementById('erro');
+  const valor = document.getElementById('resposta').value;
+  const numeros = valor.match(/\d+/g);
+
+  const dia = numeros ? parseInt(numeros[0], 10) : null;
+  const mes = numeros && numeros.length > 1 ? parseInt(numeros[1], 10) : null;
+
+  if (dia === 21 && mes === 6) {
+    document.querySelector('.btn').textContent = '✓ CORRETO!';
+    document.querySelector('.btn').style.background = '#20c060';
+    erro.innerHTML = '';
+    setTimeout(() => window.location.href = 'final.html', 900);
+  } else {
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+    erro.innerHTML = '✕ &nbsp;Ainda não é isso, decifra de novo';
+  }
+}
+
+document.getElementById('resposta').addEventListener('keydown', e => {
+  if (e.key === 'Enter') verificarFase3();
+});
+</script>
+</body>
+</html>
